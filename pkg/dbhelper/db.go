@@ -54,7 +54,7 @@ func GetLink(code string) (models.Request, error) {
 	// 	closing the database connection after the execution of function complete
 	defer db.Close()
 
-	results, err := db.Query("SELECT long_url,short_url FROM short where short_url=?", code)
+	results, err := db.Query("SELECT long_url FROM short where short_url=?", code)
 	// db.Exec()
 	if err != nil {
 		fmt.Println("Err", err.Error())
@@ -63,10 +63,10 @@ func GetLink(code string) (models.Request, error) {
 	// Next prepares the next result row for reading with the Scan method. It returns true on success, or false
 	if results.Next() {
 		// Scan copies the columns in the current row into the values pointed at by destenation
-		err = results.Scan(&link.LongUrl, &link.ShortUrl)
+		err = results.Scan(&link.LongUrl)
 		if err != nil {
 			fmt.Println("Err", err.Error())
-			// returns Null models and the error
+			fmt.Println("Err", err.Error())
 			return models.Request{}, err
 		}
 	}

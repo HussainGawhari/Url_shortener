@@ -1,4 +1,4 @@
-# github.com/bytedance/sonic v1.8.1
+# github.com/bytedance/sonic v1.8.0
 ## explicit; go 1.15
 github.com/bytedance/sonic
 github.com/bytedance/sonic/ast
@@ -70,8 +70,8 @@ github.com/goccy/go-json/internal/runtime
 # github.com/json-iterator/go v1.1.12
 ## explicit; go 1.12
 github.com/json-iterator/go
-# github.com/klauspost/cpuid/v2 v2.2.4
-## explicit; go 1.15
+# github.com/klauspost/cpuid/v2 v2.0.9
+## explicit; go 1.13
 github.com/klauspost/cpuid/v2
 # github.com/leodido/go-urn v1.2.1
 ## explicit; go 1.13
@@ -79,7 +79,7 @@ github.com/leodido/go-urn
 # github.com/mattn/go-isatty v0.0.17
 ## explicit; go 1.15
 github.com/mattn/go-isatty
-# github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
+# github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421
 ## explicit
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.2
@@ -115,13 +115,13 @@ github.com/twitchyliquid64/golang-asm/objabi
 github.com/twitchyliquid64/golang-asm/src
 github.com/twitchyliquid64/golang-asm/sys
 github.com/twitchyliquid64/golang-asm/unsafeheader
-# github.com/ugorji/go/codec v1.2.10
+# github.com/ugorji/go/codec v1.2.9
 ## explicit; go 1.11
 github.com/ugorji/go/codec
-# golang.org/x/arch v0.2.0
+# golang.org/x/arch v0.0.0-20210923205945-b76863e36670
 ## explicit; go 1.17
 golang.org/x/arch/x86/x86asm
-# golang.org/x/crypto v0.6.0
+# golang.org/x/crypto v0.5.0
 ## explicit; go 1.17
 golang.org/x/crypto/sha3
 # golang.org/x/net v0.7.0

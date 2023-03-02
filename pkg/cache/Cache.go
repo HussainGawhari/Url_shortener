@@ -9,55 +9,21 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// In this application, we first initialize a Redis client and test
-//  the connection to make sure it is working. Then we define
-//   a function getLink that takes a key as input and first tries
-//    to get the data from the cache using the getLinkFromCache
-//    function. If that fails, it gets the Link from the Linkbase
-//     using the getLinkFromDB function, and stores it in the cache
-// 	 using the setLinkInCache function for next time.
+func New() *redis.Client {
 
-// To use this caching function, you would simply call getLink
-//  with the appropriate key. The first time you call it, it will
-//  get the Link from the Linkbase and store it in the cache. The
-//  next time you call it with the same key, it will retrieve the
-//  Link from the cache instead of the Linkbase, which can significantly
-//   speed up your application.
+	client := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+		// Password: "", // no password set
+		// DB:       0,  // use default DB
 
-// Declaring global variable for creating instance of redis
-var client *redis.Client
-
-// Init function is a type of function in golang which execute atomaticly
-func init() {
-	// Initialize Redis client
-	client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
 	})
-
 	// Test the connection
 	_, err := client.Ping().Result()
 	if err != nil {
 		panic(err)
 	}
+	return client
 }
-
-// func New() *redis.Client {
-
-// 	client := redis.NewClient(&redis.Options{
-// 		Addr: "localhost:6379",
-// 		// Password: "", // no password set
-// 		// DB:       0,  // use default DB
-
-// 	})
-// 	// Test the connection
-// 	_, err := client.Ping().Result()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	return client
-// }
 
 // If the data is not available in cache then it will get from database
 func getLinkFromDB(code string) (models.Request, error) {
@@ -71,7 +37,7 @@ func getLinkFromDB(code string) (models.Request, error) {
 }
 
 // This function return the data from inside cache only
-func getLinkFromCache(key string) (models.Request, error) {
+func getLinkFromCache(key string, client *redis.Client) (models.Request, error) {
 	// Get the Link from the cache
 	var data models.Request
 	link, err := client.Get(key).Result()
@@ -85,23 +51,27 @@ func getLinkFromCache(key string) (models.Request, error) {
 	return data, nil
 }
 
-func setLinkInCache(key string, value models.Request) error {
+func setLinkInCache(key string, value models.Request, client *redis.Client) error {
 	// Set the Link in the cache
-	err := client.Set(key, value.LongUrl, 10*time.Minute).Err()
+	err := client.Set(key, value.LongUrl, 100*time.Minute).Err()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetLink(key string) (models.Request, error) {
+func GetLink(key string, client *redis.Client) (models.Request, error) {
 	// Try to get the Link from the cache first
-	link, err := getLinkFromCache(key)
+	// var request models.Request
+	link, err := getLinkFromCache(key, client)
+
 	if err != nil {
 		// If there was an error, get the Link from the database
 		link, _ = getLinkFromDB(key)
+		// request.LongUrl = link.LongUrl
+		// fmt.Println(link.LongUrl)
 		// Then store the Link in the cache for next time
-		err = setLinkInCache(key, link)
+		err = setLinkInCache(key, link, client)
 		if err != nil {
 			return models.Request{}, err
 		}
@@ -110,7 +80,7 @@ func GetLink(key string) (models.Request, error) {
 }
 
 // Here is simple delete function which delete from cache
-func DeleteCach(key string) error {
+func DeleteCach(key string, client *redis.Client) error {
 
 	err := client.Del(key)
 	if err != nil {

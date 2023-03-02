@@ -152,7 +152,6 @@ type StackMapBuilder struct {
     b Bitmap
 }
 
-//go:nocheckptr
 func (self *StackMapBuilder) Build() (p *StackMap) {
     nb := len(self.b.B)
     bm := mallocgc(_StackMapSize + uintptr(nb) - 1, byteType, false)

@@ -20,12 +20,13 @@ func GetShortLink(c *gin.Context) {
 
 	code := c.Param("code")
 	// id, _ := strconv.Atoi(code)
-	// client := cache.New()
-	request, err := cache.GetLink(code)
+	client := cache.New()
+	request, err := cache.GetLink(code, client)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
+
 	c.Redirect(http.StatusPermanentRedirect, request.LongUrl)
 	// c.JSONP(http.StatusOK, gin.H{
 	// 	"code":    200,
@@ -66,8 +67,9 @@ func GenerateShortLink(c *gin.Context) {
 
 func Delete(c *gin.Context) {
 	key := c.Param("code")
+	client := cache.New()
 	// var response models.Response
-	err := cache.DeleteCach(key)
+	err := cache.DeleteCach(key, client)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
